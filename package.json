@@ -1,49 +1,47 @@
 {
-    "name": "merkle_card",
-    "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-      "@privy-io/react-auth": "^1.74.1",
-      "dotenv": "^16.4.5",
-      "downloadjs": "^1.4.7",
-      "html-to-image": "^1.11.11",
-      "million": "^3.1.11",
-      "mini-css-extract-plugin": "2.9.0",
-      "react": "^18.3.1",
-      "react-dom": "^18.3.1",
-      "react-tilt": "^1.0.2",
-      "styled-components": "^6.1.11",
-      "web-vitals": "^4.2.1"
-    },
-    "scripts": {
-      "start": "craco start",
-      "build": "craco build",
-      "test": "craco test",
-      "eject": "react-scripts eject"
-    },
-    "resolutions": {
-      "mini-css-extract-plugin": "2.4.5"
-    },
-    "eslintConfig": {
-      "extends": [
-        "react-app",
-        "react-app/jest"
-      ]
-    },
-    "browserslist": {
-      "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
-      ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
-      ]
-    },
-    "devDependencies": {
-      "@craco/craco": "^7.1.0"
-    }
+  "name": "merkle_card",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@privy-io/react-auth": "^1.74.1",
+    "dotenv": "^16.4.5",
+    "downloadjs": "^1.4.7",
+    "html-to-image": "^1.11.11",
+    "million": "^3.1.11",
+    "mini-css-extract-plugin": "2.9.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-tilt": "^1.0.2",
+    "styled-components": "^6.1.11"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
+  },
+  "resolutions": {
+    "mini-css-extract-plugin": "2.4.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0"
   }
-  
+}

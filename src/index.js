@@ -1,12 +1,35 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client'
+import ReactDOM from 'react-dom/client';
+
 import './index.css';
 
-import dApp from './App';
+import {PrivyProvider} from '@privy-io/react-auth';
 
-const root = createRoot(document.getElementById('root'))
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <PrivyProvider
+      appId={process.env.REACT_APP_PRIVY_APP_ID}
+      onLogin={(user) => console.log(`User ${user.id} logged in!`)}
+      config={{
+        // Display email and wallet as login methods
+        loginMethods: ['email', 'wallet'],
+        // Customize Privy's appearance in your app
+        appearance: {
+          theme: 'light',
+          accentColor: '#676FFF',
+          logo: process.env.REACT_APP_LOGO_URL,
+        },
+        // Create embedded wallets for users who don't have a wallet
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets',
+        },
+      }}
+    >
+      <App />
+    </PrivyProvider>
+  </React.StrictMode>,
 );
