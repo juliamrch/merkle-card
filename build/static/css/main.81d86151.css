@@ -1,0 +1,2 @@
+*{box-sizing:border-box;margin:0;padding:0}body{background-color:#23252c;height:100vh}#main{display:flex;gap:1rem;justify-content:center;margin-top:2rem}.main-heading{font-size:1.5rem}@media screen and (max-width:45em){#main{align-items:center;flex-direction:column}.main-heading{font-size:1.3rem}}.App{text-align:center}.App-header{align-items:center;background-color:#282c34;color:#fff;display:flex;flex-direction:column;font-size:calc(10px + 2vmin);justify-content:center;min-height:100vh}.App-link{color:#61dafb}
+/*# sourceMappingURL=main.81d86151.css.map*/
