@@ -3,3 +3,4 @@
 .env
 functions
 .DS_Store
+/build/*
