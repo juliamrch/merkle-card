@@ -75,4 +75,17 @@
     color: #fff;
     text-decoration: none;
   }
+
+  .web3button {
+    border-color: white;
+    background-color: transparent;
+    color:#fff;
+    display: block;
+    margin: 0 auto;
+    padding: 12px 30px;
+    border: 2px solid #E8E8E8;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+  }
  

@@ -300,7 +300,7 @@ function App() {
         <UserInputWrap>
           <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
           <LoginButton className="login-button" />
-          <button onClick={() => setShowModal(true)}>Show NFTs</button>
+          <button className="web3button"onClick={() => setShowModal(true)}>Choose Picture</button>
           <Modal show={showModal} handleClose={() => setShowModal(false)}>
             {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
           </Modal>
