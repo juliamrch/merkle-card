@@ -1,14 +1,17 @@
 import Card from "./components/Card";
-import { UserInputWrap, Input, Textarea, Label, Button, ThemesWrap, SelectTheme } from './styled/UserInputSection'
-import { HeadingStyled } from './styled/Headings'
-import Footer from './components/Footer'
-import { useEffect, useState } from 'react'
-import * as htmlToImage from 'html-to-image'
-import download from 'downloadjs'
-import img_location from './assets/mikoto-urabe.jpg'
-import LoginButton from './components/Login'
-import ListNFTS from "./components/ListNFTS";
-import {usePrivy} from '@privy-io/react-auth';
+import { UserInputWrap, Input, Textarea, Label, Button, ThemesWrap, SelectTheme } from './styled/UserInputSection';
+import { HeadingStyled } from './styled/Headings';
+import Footer from './components/Footer';
+import { useEffect, useState } from 'react';
+import * as htmlToImage from 'html-to-image';
+import download from 'downloadjs';
+import img_location from './assets/mikoto-urabe.jpg';
+import LoginButton from './components/Login';
+import Modal from './components/Modal';
+import Gallery from './components/Gallery';
+import LoadingSpinner from './components/Spinner';
+import { usePrivy } from '@privy-io/react-auth';
+import axios from 'axios';
 
 function App() {
   const { user } = usePrivy();
@@ -30,7 +33,7 @@ function App() {
   });
   const [breakpoint, setBreakpoint] = useState(Math.round(window.document.body.clientWidth / 16));
   const [colors, setColors] = useState({
-    cardBackgroundColor: "#1A1B21", // Ensure this property is defined
+    cardBackgroundColor: "#1A1B21",
     nameColor: "#FFFFFF",
     occupationColor: "#F3BF99",
     websiteColor: "#767676",
@@ -40,7 +43,42 @@ function App() {
     emailBackgroundColor: "#161619"
   });
   const [selectedNFT, setSelectedNFT] = useState(null);
-  const {ready, authenticated, login} = usePrivy();
+  const [nfts, setNfts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const { ready, authenticated, login } = usePrivy();
+
+  useEffect(() => {
+    const fetchNFTs = async () => {
+      if (!user?.wallet?.address) return;
+
+      try {
+        const response = await axios.get('/api/nft/v1/byaddress', {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_API_TOKEN}`
+          },
+          params: {
+            "chainIds": "1",
+            "address": user.wallet.address,
+            "limit": "50",
+            "offset": "0"
+          }
+        });
+        setNfts(response.data.assets); // Update state with the assets array
+      } catch (error) {
+        console.error('Error fetching NFTs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNFTs();
+  }, [user?.wallet?.address]);
+
+  const handleSelectNFT = (nft) => {
+    setSelectedNFT(nft);
+    setShowModal(false);
+  };
 
   useEffect(() => {
     if (isImageModified.status) {
@@ -52,39 +90,35 @@ function App() {
             document.querySelector("#upload_label").classList.remove("focus");
             setTimeout(() => {
               document.querySelector("#upload_label").innerHTML = "Upload new pic";
-            }, 2500)
+            }, 2500);
           }
         }
       } else {
         document.querySelector("#upload_label").innerHTML = "Please upload an image file";
         document.querySelector("#upload_label").classList.add("focus");
-        document.querySelector(".main-heading").scrollIntoView(true, { behavior: "smooth" })
+        document.querySelector(".main-heading").scrollIntoView(true, { behavior: "smooth" });
       }
     }
-  }, [isImageModified])
+  }, [isImageModified]);
 
   function inputChange(e) {
-    setInputs(prev => {
-      return {
-        ...prev,
-        [e.target.name]: e.target.value
-      }
-    })
+    setInputs(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   }
 
   function input_check() {
-
     let filled = {
       inputs: false,
       textarea: false,
       image: false
-    }
+    };
 
     let all_input_fields = document.querySelectorAll("input");
     let textareas = document.querySelectorAll("textarea");
 
     for (let index = 0; index < all_input_fields.length; index++) {
-
       if (index === 0) {
         if (all_input_fields[index].files.length !== 0) {
           filled.image = true;
@@ -97,7 +131,6 @@ function App() {
           filled.inputs = true;
         }
       }
-
     }
 
     for (let index = 0; index < textareas.length; index++) {
@@ -113,7 +146,6 @@ function App() {
   }
 
   function colorChange(e) {
-
     function borderChange(element) {
       element.style.borderColor = "#000000"; //#ffb681
       let all_color_selectors = element.parentElement.childNodes;
@@ -123,7 +155,7 @@ function App() {
             item.style.borderColor = "transparent";
           }
         }
-      })
+      });
     }
     if (e.target.style.backgroundColor === "rgb(88, 44, 77)") {
       borderChange(e.target);
@@ -136,7 +168,7 @@ function App() {
         descColor: "#D6CCC0",
         emailColor: "#BFB5AF",
         emailBackgroundColor: "#6B3B54"
-      })
+      });
     } else if (e.target.style.backgroundColor === "black") {
       borderChange(e.target);
       setColors({
@@ -148,7 +180,7 @@ function App() {
         descColor: "#9a9a9a",
         emailColor: "#918E9B",
         emailBackgroundColor: "#161619"
-      })
+      });
     } else if (e.target.style.backgroundColor === "white") {
       borderChange(e.target);
       setColors({
@@ -160,7 +192,7 @@ function App() {
         descColor: "#7e7e7e",
         emailColor: "#747474",
         emailBackgroundColor: "#D5D4D8"
-      })
+      });
     } else if (e.target.style.backgroundColor === "rgb(61, 90, 128)") {
       borderChange(e.target);
       setColors({
@@ -172,7 +204,7 @@ function App() {
         descColor: "#98C1D9",
         emailColor: "#98C1D9",
         emailBackgroundColor: "#385071"
-      })
+      });
     } else if (e.target.style.backgroundColor === "rgb(244, 232, 193)") {
       borderChange(e.target);
       setColors({
@@ -184,9 +216,8 @@ function App() {
         descColor: "#795543",
         emailColor: "#502419",
         emailBackgroundColor: "#E0D0AC"
-      })
-    }
-    else if (e.target.style.backgroundColor === "rgb(238, 180, 179)") {
+      });
+    } else if (e.target.style.backgroundColor === "rgb(238, 180, 179)") {
       borderChange(e.target);
       setColors({
         cardBackgroundColor: "#EEB4B3",
@@ -197,7 +228,7 @@ function App() {
         descColor: "#784784",
         emailColor: "#402350",
         emailBackgroundColor: "#DBA2AC"
-      })
+      });
     }
   }
 
@@ -206,27 +237,25 @@ function App() {
     htmlToImage.toPng(document.querySelector("#card"), {
       quality: 1.0
     }).then((dataUrl) => {
-      download(dataUrl, 'business_card_image')
+      download(dataUrl, 'business_card_image');
 
       setDownloadState(true);
 
       setTimeout(() => {
         setDownloadState(false);
-      }, 1000)
-
-    })
+      }, 1000);
+    });
   }
 
   window.addEventListener('resize', () => {
     setBreakpoint(Math.round((window.document.body.clientWidth) / 16));
-  })
+  });
 
   useEffect(() => {
+    let url = new URL(window.location.href);
+    let search = new URLSearchParams(url.searchParams);
 
-    let url = new URL(window.location.href)
-    let search = new URLSearchParams(url.searchParams)
-    
-    if(search.toString() === ""){
+    if (search.toString() === "") {
       fetch({
         method: 'post',
         headers: {
@@ -234,16 +263,15 @@ function App() {
         },
         body: 'direct'
       }).then((res) => {
-        console.log(res)
+        console.log(res);
         return res.json();
       }).then((data) => {
-        console.log(data)
+        console.log(data);
       }).catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
     } else {
       for (let i of search.entries()) {
-  
         fetch({
           method: 'post',
           headers: {
@@ -251,13 +279,13 @@ function App() {
           },
           body: i[1]
         }).then((res) => {
-          console.log(res)
+          console.log(res);
           return res.json();
         }).then((data) => {
-          console.log(data)
+          console.log(data);
         }).catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       }
     }
   }, []);
@@ -269,37 +297,38 @@ function App() {
   return (
     <>
       <main id="main">
-
         <UserInputWrap>
           <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
-
           <LoginButton className="login-button" />
-          <ListNFTS userAddress={user?.wallet?.address} />
+          <button onClick={() => setShowModal(true)}>Show NFTs</button>
+          <Modal show={showModal} handleClose={() => setShowModal(false)}>
+            {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
+          </Modal>
           {ready && authenticated && (
-             <>
-          <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
-          <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
-          <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
-          <Input type="text" name="occupation" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.occupation || ""} id="occupation" placeholder="Profession" required autoComplete="off" />
-          <Input type="text" name="website" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.website || ""} id="website" placeholder="Website" required autoComplete="off" />
-          <Input type="email" name="email" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.email || ""} id="email" placeholder="Email" required autoComplete="off" />
-          <Textarea type="text" name="about" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.about || ""} id="about" placeholder="A little bit about you.." rows="5" required autoComplete="off" />
-          <Textarea type="text" name="services" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.services || ""} id="interests" placeholder="Services offered..." rows="5" required autoComplete="off" />
-          <ThemesWrap>
-            <p>Theme </p>
-            <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'black' }} />
-            <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'white' }} />
-            <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#582C4D' }} />
-            <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#3D5A80' }} />
-            <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#F4E8C1' }} />
-            <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#EEB4B3' }} />
-          </ThemesWrap>
-          <Button className="for-desktop download_btn" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
-          </>
-        )}
+            <>
+              <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
+              <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
+              <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
+              <Input type="text" name="occupation" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.occupation || ""} id="occupation" placeholder="Profession" required autoComplete="off" />
+              <Input type="text" name="website" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.website || ""} id="website" placeholder="Website" required autoComplete="off" />
+              <Input type="email" name="email" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.email || ""} id="email" placeholder="Email" required autoComplete="off" />
+              <Textarea type="text" name="about" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.about || ""} id="about" placeholder="A little bit about you.." rows="5" required autoComplete="off" />
+              <Textarea type="text" name="services" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.services || ""} id="interests" placeholder="Services offered..." rows="5" required autoComplete="off" />
+              <ThemesWrap>
+                <p>Theme </p>
+                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'black' }} />
+                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'white' }} />
+                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#582C4D' }} />
+                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#3D5A80' }} />
+                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#F4E8C1' }} />
+                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#EEB4B3' }} />
+              </ThemesWrap>
+              <Button className="for-desktop download_btn" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
+            </>
+          )}
         </UserInputWrap>
-        <Card image_src={selectedNFT ? selectedNFT.image_original_url : null} />
-        { <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} /> }
+        <Card image_src={selectedNFT ? selectedNFT.image_original_url : image} />
+        <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
       </main>
       <Footer />
     </>
