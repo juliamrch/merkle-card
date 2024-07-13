@@ -75,16 +75,8 @@ function App() {
 
       try {
         console.log('Fetching NFTs for address:', user.wallet.address);
-        const response = await axios.get('/api/nft/v1/byaddress', {
-          headers: {
-            "Authorization": `Bearer ${process.env.REACT_APP_API_TOKEN}`
-          },
-          params: {
-            "chainIds": "1",
-            "address": user.wallet.address,
-            "limit": "50",
-            "offset": "0"
-          }
+        const response = await axios.get('/api/portfolio', {
+        
         });
 
         // Check if the response is JSON

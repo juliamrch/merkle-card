@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 const envPath = path.resolve(__dirname, '..', '.env')
 dotenv.config({ path: envPath })
 
-const ONEINCH_KEY = process.env.ONEINCH_API_KEY
+const REACT_APP_ONEINCH_KEY = process.env.REACT_APP_ONEINCH_API_KEY
 
 const chains = require('./chains.json')
 const axios = require("axios");
@@ -14,7 +14,7 @@ async function getWalletTokensInfoRaw(wallet) {
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${ONEINCH_KEY}`
+            "Authorization": `Bearer ${REACT_APP_ONEINCH_KEY}`
         },
         params: {
             "addresses": wallet,
@@ -38,7 +38,7 @@ async function getJpegsInfo(wallet) {
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${ONEINCH_KEY}`
+            "Authorization": `Bearer ${REACT_APP_ONEINCH_KEY}`
         },
         params: {
             "chainIds": "1,45,137,10,56,42161,43114,100,250,1313161554,8217,324,8453",
@@ -60,7 +60,7 @@ async function getBalances() {
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${ONEINCH_KEY}`
+            "Authorization": `Bearer ${REACT_APP_ONEINCH_KEY}`
         },
         params: {}
     };
@@ -91,7 +91,7 @@ async function getSpotPrices() {
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${ONEINCH_KEY}`
+            "Authorization": `Bearer ${REACT_APP_ONEINCH_KEY}`
         },
         params: {
             "currency": "USD"
@@ -112,7 +112,7 @@ async function getTokensInfo(chainId, tokens) {
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${ONEINCH_KEY}`
+            "Authorization": `Bearer ${REACT_APP_ONEINCH_KEY}`
         },
         params: {
             "addresses": tokens.join(',')
