@@ -300,12 +300,11 @@ function App() {
         <UserInputWrap>
           <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
           <LoginButton className="login-button" />
-          <button className="web3button"onClick={() => setShowModal(true)}>Choose Picture</button>
-          <Modal show={showModal} handleClose={() => setShowModal(false)}>
-            {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
-          </Modal>
           {ready && authenticated && (
             <>
+              <button className="web3button"onClick={() => setShowModal(true)} >Choose Picture</button>
+              <Modal show={showModal} handleClose={() => setShowModal(false)}>{loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect=   {handleSelectNFT} />}
+              </Modal>
               <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
               <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
