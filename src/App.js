@@ -347,7 +347,6 @@ function App() {
               <button className="web3button"onClick={() => setShowModal(true)} >Choose Picture</button>
               <Modal show={showModal} handleClose={() => setShowModal(false)}>{loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect=   {handleSelectNFT} />}
               </Modal>
-              <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
               <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
               <Input type="text" name="occupation" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.occupation || ""} id="occupation" placeholder="Profession" required autoComplete="off" />
