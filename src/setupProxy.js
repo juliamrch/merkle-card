@@ -7,7 +7,7 @@ module.exports = function(app) {
       target: 'https://api.1inch.dev',
       changeOrigin: true,
       pathRewrite: {
-        '^/api': '',
+        '^/api': '', // remove /api prefix when forwarding to target
       },
     })
   );

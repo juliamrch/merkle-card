@@ -13,8 +13,9 @@ import LoadingSpinner from './components/Spinner';
 import { usePrivy } from '@privy-io/react-auth';
 import axios from 'axios';
 
+
 function App() {
-  const { user } = usePrivy();
+  const { user, ready, authenticated } = usePrivy();
   const [image, setImage] = useState(img_location);
   const [isImageModified, setIsImageModified] = useState({
     status: false,
@@ -46,13 +47,34 @@ function App() {
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const { ready, authenticated, login } = usePrivy();
+
+  useEffect(() => {
+    const requestAccounts = async () => {
+      if (window.ethereum) {
+        try {
+          console.log('Requesting accounts...');
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          console.log('Accounts requested successfully');
+        } catch (error) {
+          console.error('User denied account access', error);
+        }
+      } else {
+        console.error('Ethereum provider not found');
+      }
+    };
+
+    requestAccounts();
+  }, []);
 
   useEffect(() => {
     const fetchNFTs = async () => {
-      if (!user?.wallet?.address) return;
+      if (!user?.wallet?.address) {
+        console.log('No wallet address found');
+        return;
+      }
 
       try {
+        console.log('Fetching NFTs for address:', user.wallet.address);
         const response = await axios.get('/api/nft/v1/byaddress', {
           headers: {
             "Authorization": `Bearer ${process.env.REACT_APP_API_TOKEN}`
@@ -64,9 +86,29 @@ function App() {
             "offset": "0"
           }
         });
-        setNfts(response.data.assets); // Update state with the assets array
+
+        // Check if the response is JSON
+        if (response.headers['content-type'].includes('application/json')) {
+          console.log('NFTs fetched successfully:', response.data.assets);
+          const formattedNFTs = response.data.assets.map(asset => ({
+            id: asset.id,
+            name: asset.name,
+            description: asset.description,
+            imageUrl: asset.image_original_url,
+            permalink: asset.permalink
+          }));
+          setNfts(formattedNFTs); // Update state with the formatted assets array
+        } else {
+          console.error('Unexpected response format:', response.data);
+        }
       } catch (error) {
-        console.error('Error fetching NFTs:', error);
+        if (error.response) {
+          console.error('Error response:', error.response.data);
+        } else if (error.request) {
+          console.error('No response received:', error.request);
+        } else {
+          console.error('Error', error.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -326,7 +368,7 @@ function App() {
             </>
           )}
         </UserInputWrap>
-        <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.image_original_url : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
+        <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.imageUrl : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
       </main>
       <Footer />
     </>

@@ -29,7 +29,7 @@ const Gallery = ({ nfts, onSelect }) => {
     <GalleryWrapper>
       {nfts.map((nft, index) => (
         <GalleryItem key={index} onClick={() => onSelect(nft)}>
-          <GalleryImage src={nft.image_original_url} alt={nft.name} />
+          <GalleryImage src={nft.imageUrl} alt={nft.name} />
           <h3>{nft.name}</h3>
           <p>{nft.description}</p>
         </GalleryItem>
