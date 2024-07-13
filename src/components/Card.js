@@ -10,11 +10,8 @@ import { Tilt } from 'react-tilt'
 
 const Card = (props) => {
     var src = {
-        img_src: props.image_src
+        img_src: props.image_src || location
     };
-    if (document.querySelector("#image") == null || document.querySelector("#image").files.length === 0) {
-        src.img_src = location
-    }
 
     // card JSX element
     const cardWithStylesJSX = (
@@ -44,17 +41,27 @@ const Card = (props) => {
 }
 
 Card.defaultProps = {
-    name: "Julia",
-    email: "hey@lmeow.com",
-    occupation: "Lmeow Capital",
-    website: "",
-    linkedin: "https://www.linkedin.com/",
-    about: "gamblorrrr",
-    services: "I offer bad luck, cat hair on clothes, and unhinged statements",
-    github: "https://github.com/",
-    twitter: "https://twitter.com/",
-    instagram: "https://instagram.com/",
-    image_src: location
-}
+  colors: {
+    cardBackgroundColor: '#ffffff',
+    nameColor: "#000000",
+    occupationColor: "#000000",
+    websiteColor: "#000000",
+    aboutInterestsTitleColor: "#000000",
+    descColor: "#000000",
+    emailColor: "#000000",
+    emailBackgroundColor: "#ffffff"
+  },
+  name: "Julia",
+  email: "hey@lmeow.com",
+  occupation: "Lmeow Capital",
+  website: "",
+  linkedin: "https://www.linkedin.com/",
+  about: "gamblorrrr",
+  services: "I offer bad luck, cat hair on clothes, and unhinged statements",
+  github: "https://github.com/",
+  twitter: "https://twitter.com/",
+  instagram: "https://instagram.com/",
+  image_src: location
+};
 
-export default Card
+export default Card;

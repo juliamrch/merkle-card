@@ -43,5 +43,6 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0"
-  }
+  },
+  "proxy": "https://api.1inch.dev"
 }

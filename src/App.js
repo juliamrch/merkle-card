@@ -7,10 +7,11 @@ import * as htmlToImage from 'html-to-image'
 import download from 'downloadjs'
 import img_location from './assets/mikoto-urabe.jpg'
 import LoginButton from './components/Login'
+import ListNFTS from "./components/ListNFTS";
 import {usePrivy} from '@privy-io/react-auth';
 
 function App() {
-
+  const { user } = usePrivy();
   const [image, setImage] = useState(img_location);
   const [isImageModified, setIsImageModified] = useState({
     status: false,
@@ -29,7 +30,7 @@ function App() {
   });
   const [breakpoint, setBreakpoint] = useState(Math.round(window.document.body.clientWidth / 16));
   const [colors, setColors] = useState({
-    cardBackgroundColor: "#1A1B21",
+    cardBackgroundColor: "#1A1B21", // Ensure this property is defined
     nameColor: "#FFFFFF",
     occupationColor: "#F3BF99",
     websiteColor: "#767676",
@@ -38,6 +39,7 @@ function App() {
     emailColor: "#918E9B",
     emailBackgroundColor: "#161619"
   });
+  const [selectedNFT, setSelectedNFT] = useState(null);
   const {ready, authenticated, login} = usePrivy();
 
   useEffect(() => {
@@ -270,7 +272,9 @@ function App() {
 
         <UserInputWrap>
           <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
+
           <LoginButton className="login-button" />
+          <ListNFTS userAddress={user?.wallet?.address} />
           {ready && authenticated && (
              <>
           <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
@@ -294,8 +298,8 @@ function App() {
           </>
         )}
         </UserInputWrap>
-        
-        <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
+        <Card image_src={selectedNFT ? selectedNFT.image_original_url : null} />
+        { <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} /> }
       </main>
       <Footer />
     </>
