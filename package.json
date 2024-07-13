@@ -4,10 +4,13 @@
   "private": true,
   "dependencies": {
     "@privy-io/react-auth": "^1.74.1",
+    "@privy-io/server-auth": "^1.9.1",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "downloadjs": "^1.4.7",
     "html-to-image": "^1.11.11",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
     "million": "^3.1.11",
     "mini-css-extract-plugin": "2.9.0",
     "mongodb": "^6.8.0",

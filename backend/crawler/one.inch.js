@@ -1,7 +1,4 @@
-const path = require('path')
-const dotenv = require('dotenv')
-const envPath = path.resolve(__dirname, '..', '.env')
-dotenv.config({ path: envPath })
+require('../libs/env')
 
 const REACT_APP_ONEINCH_KEY = process.env.REACT_APP_ONEINCH_API_KEY
 

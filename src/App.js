@@ -15,44 +15,7 @@ import axios from 'axios';
 
 
 function App() {
-  const { user, ready, authenticated, getAccessToken } = usePrivy();
-  const [userData, setUserData] = useState(null);
-
-  const fetchUserData = async () => {
-    if (!authenticated) {
-      console.log('User not authenticated');
-      return;
-    }
-
-    try {
-      // Get the access token from Privy
-      const token = await getAccessToken();
-
-      // Make a request to your backend
-      const response = await fetch('/api/user/logged', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
-      }
-
-      const data = await response.json();
-      setUserData(data);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (authenticated) {
-      fetchUserData();
-    }
-  }, [authenticated]);
+  const { user, ready, authenticated } = usePrivy();
   const [image, setImage] = useState(img_location);
   const [isImageModified, setIsImageModified] = useState({
     status: false,
@@ -112,8 +75,16 @@ function App() {
 
       try {
         console.log('Fetching NFTs for address:', user.wallet.address);
-        const response = await axios.get('/api/portfolio', {
-        
+        const response = await axios.get('/api/nft/v1/byaddress', {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_API_TOKEN}`
+          },
+          params: {
+            "chainIds": "1",
+            "address": user.wallet.address,
+            "limit": "50",
+            "offset": "0"
+          }
         });
 
         // Check if the response is JSON
