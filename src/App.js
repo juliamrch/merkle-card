@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react'
 import * as htmlToImage from 'html-to-image'
 import download from 'downloadjs'
 import img_location from './assets/mikoto-urabe.jpg'
-import Header from './components/Header'
 import LoginButton from './components/Login'
+import {usePrivy} from '@privy-io/react-auth';
 
 function App() {
 
@@ -38,6 +38,7 @@ function App() {
     emailColor: "#918E9B",
     emailBackgroundColor: "#161619"
   });
+  const {ready, authenticated, login} = usePrivy();
 
   useEffect(() => {
     if (isImageModified.status) {
@@ -270,6 +271,8 @@ function App() {
         <UserInputWrap>
           <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
           <LoginButton className="login-button" />
+          {ready && authenticated && (
+             <>
           <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
           <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
           <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
@@ -288,7 +291,10 @@ function App() {
             <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#EEB4B3' }} />
           </ThemesWrap>
           <Button className="for-desktop download_btn" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
+          </>
+        )}
         </UserInputWrap>
+        
         <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
       </main>
       <Footer />

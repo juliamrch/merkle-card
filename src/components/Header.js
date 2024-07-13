@@ -1,13 +1,23 @@
 import React from 'react'
 import { usePrivy } from "@privy-io/react-auth";
 
-function Header() {
-    const { ready, authenticated, user, login, logout } = usePrivy();
+function Header({ authenticated, onLogin, onLogout }) {
+    const { ready, user, login, logout } = usePrivy();
 
     // Wait until the Privy client is ready before taking any actions
     if (!ready) {
         return null;
     }
+
+    const handleLogin = async () => {
+        await login();
+        onLogin(user);
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        onLogout();
+    };
 
     return (
         <div className="App">
@@ -22,12 +32,12 @@ function Header() {
                     style={{ width: "600px", height: "250px", borderRadius: "6px" }}
                     />
                     <br />
-                    <button onClick={logout} style={{ marginTop: "20px", padding: "12px", backgroundColor: "#069478", color: "#FFF", border: "none", borderRadius: "6px" }}>
+                    <button onClick={handleLogout} style={{ marginTop: "20px", padding: "12px", backgroundColor: "#069478", color: "#FFF", border: "none", borderRadius: "6px" }}>
                     Log Out
                     </button>
                 </div>
                 ) : (
-                    <button onClick={login} style={{padding: "12px", backgroundColor: "#069478", color: "#FFF", border: "none", borderRadius: "6px" }}>Log In</button>
+                    <button onClick={handleLogin} style={{padding: "12px", backgroundColor: "#069478", color: "#FFF", border: "none", borderRadius: "6px" }}>Log In</button>
                 )}
             </header>
         </div>
