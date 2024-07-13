@@ -7,6 +7,7 @@ import * as htmlToImage from 'html-to-image'
 import download from 'downloadjs'
 import img_location from './assets/mikoto-urabe.jpg'
 import Header from './components/Header'
+import LoginButton from './components/Login'
 
 function App() {
 
@@ -265,9 +266,10 @@ function App() {
   return (
     <>
       <main id="main">
-      <Header />
+
         <UserInputWrap>
           <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
+          <LoginButton className="login-button" />
           <Label htmlFor="image" id="upload_label">Upload Profile Pic<i className="fas fa-user-circle"></i></Label>
           <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
           <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />

@@ -43,3 +43,36 @@
   .App-link {
     color: #61dafb;
   }
+  .login-button{
+    background-color: #61dafb;
+    color: #23252C;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    text-align: center;
+    align-items: center;
+    display: block;
+    margin: 0 auto;
+  }
+           
+  .login-button {
+    background-image: linear-gradient(to right, #DD5E89 0%, #F7BB97  51%, #DD5E89  100%);
+    margin: 10px;
+    padding: 15px 45px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;            
+    box-shadow: 0 0 20px #eee;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .login-button:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+  }
+ 
