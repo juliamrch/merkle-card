@@ -35,7 +35,7 @@ app.use(cors(corsOptions));
 // Use the logged function as middleware for this route
 app.use('/api/user/logged', logged);
 
-const port = 5000;
+const port = 8080;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 })
