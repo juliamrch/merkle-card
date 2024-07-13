@@ -11,6 +11,7 @@ import Modal from './components/Modal';
 import Gallery from './components/Gallery';
 import LoadingSpinner from './components/Spinner';
 import { usePrivy } from '@privy-io/react-auth';
+import WalletsList from './components/WalletsList';
 import axios from 'axios';
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
       }
 
       const data = await response.json();
+      const secondaryWallets = data.user.wallet?.address;
       const formattedNFTs = data.cards[0].nfts.map(asset => ({
         id: '',
         name: asset.name,
@@ -319,6 +321,7 @@ function App() {
               <Modal show={showModal} handleClose={() => setShowModal(false)}>
                 {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
               </Modal>
+              <WalletsList onClick={() => setShowModal(true)}/>
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
               <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
               <Input type="text" name="occupation" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.occupation || ""} id="occupation" placeholder="Profession" required autoComplete="off" />
