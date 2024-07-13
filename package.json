@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@privy-io/react-auth": "^1.74.1",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "downloadjs": "^1.4.7",
     "html-to-image": "^1.11.11",
