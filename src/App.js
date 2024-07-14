@@ -13,46 +13,11 @@ import LoadingSpinner from './components/Spinner';
 import { usePrivy } from '@privy-io/react-auth';
 import axios from 'axios';
 
-
 function App() {
   const { user, ready, authenticated, getAccessToken } = usePrivy();
   const [userData, setUserData] = useState(null);
-
-  const fetchUserData = async () => {
-    if (!authenticated) {
-      console.log('User not authenticated');
-      return;
-    }
-
-    try {
-      // Get the access token from Privy
-      const token = await getAccessToken();
-
-      // Make a request to your backend
-      const response = await fetch('http://localhost:5000/api/user/logged', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
-      }
-
-      const data = await response.json();
-      setUserData(data);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (authenticated) {
-      fetchUserData();
-    }
-  }, [authenticated]);
+  const [nfts, setNfts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [image, setImage] = useState(img_location);
   const [isImageModified, setIsImageModified] = useState({
     status: false,
@@ -81,71 +46,47 @@ function App() {
     emailBackgroundColor: "#161619"
   });
   const [selectedNFT, setSelectedNFT] = useState(null);
-  const [nfts, setNfts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
+  const fetchUserData = async () => {
+    if (!authenticated) {
+      console.log('User not authenticated');
+      return;
+    }
+    
+    try {
+      const token = await getAccessToken();
+      const response = await fetch('http://localhost:8080/api/user/logged', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+
+      const data = await response.json();
+      const formattedNFTs = data.cards[0].nfts.map(asset => ({
+        id: '',
+        name: asset.name,
+        description: '',
+        imageUrl: asset.image,
+        permalink: asset.link
+      }));
+      setNfts(formattedNFTs); setLoading(false)
+    } catch (error) {
+      console.error('Failed to fetch user data', error);
+    }
+  };
+
   useEffect(() => {
-    const requestAccounts = async () => {
-      if (window.ethereum) {
-        try {
-          console.log('Requesting accounts...');
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          console.log('Accounts requested successfully');
-        } catch (error) {
-          console.error('User denied account access', error);
-        }
-      } else {
-        console.error('Ethereum provider not found');
-      }
-    };
-
-    requestAccounts();
-  }, []);
-
-  useEffect(() => {
-    const fetchNFTs = async () => {
-      if (!user?.wallet?.address) {
-        console.log('No wallet address found');
-        return;
-      }
-
-      try {
-        return 
-        console.log('Fetching NFTs for address:', user.wallet.address);
-        const response = await axios.get('/api/portfolio', {
-        
-        });
-
-        // Check if the response is JSON
-        if (response.headers['content-type'].includes('application/json')) {
-          console.log('NFTs fetched successfully:', response.data.assets);
-          const formattedNFTs = response.data.assets.map(asset => ({
-            id: asset.id,
-            name: asset.name,
-            description: asset.description,
-            imageUrl: asset.image_original_url,
-            permalink: asset.permalink
-          }));
-          setNfts(formattedNFTs); // Update state with the formatted assets array
-        } else {
-          console.error('Unexpected response format:', response.data);
-        }
-      } catch (error) {
-        if (error.response) {
-          console.error('Error response:', error.response.data);
-        } else if (error.request) {
-          console.error('No response received:', error.request);
-        } else {
-          console.error('Error', error.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNFTs();
-  }, [user?.wallet?.address]);
+    if (authenticated) {
+      fetchUserData();
+    }
+  }, [authenticated]);
 
   const handleSelectNFT = (nft) => {
     setSelectedNFT(nft);
@@ -374,8 +315,9 @@ function App() {
           <LoginButton className="login-button" />
           {ready && authenticated && (
             <>
-              <button className="web3button"onClick={() => setShowModal(true)} >Choose Picture</button>
-              <Modal show={showModal} handleClose={() => setShowModal(false)}>{loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect=   {handleSelectNFT} />}
+              <button className="web3button" onClick={() => setShowModal(true)}>Choose Picture</button>
+              <Modal show={showModal} handleClose={() => setShowModal(false)}>
+                {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
               </Modal>
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
               <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
@@ -402,6 +344,6 @@ function App() {
       <Footer />
     </>
   );
-}
+};
 
 export default App;
