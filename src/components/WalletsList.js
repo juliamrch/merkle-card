@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
+import { usePrivy,useWallets } from '@privy-io/react-auth';
 import styled from 'styled-components';
 import Modal from './Modal'; // Assuming you have a Modal component
 
@@ -51,9 +51,42 @@ const WalletsList = () => {
   const { authenticated, getAccessToken } = usePrivy();
   const [mainWallet, setMainWallet] = useState(null);
   const [currentWallet, setCurrentWallet] = useState(null);
-  const [wallets, setWallets] = useState([]);
+  const [portfolioWallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+
+  const { wallets } = useWallets();
+
+  
+  async function sign() {
+    const wallet = wallets[0]; // Replace this with your desired wallet
+    const address = wallet.address
+
+    const token = await getAccessToken();
+    const response = await fetch('http://localhost:8080/api/card/getWalletSignatureMessage?address=' + address, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    console.log('getWalletSignatureMessage', data)
+
+    const signature = await wallet.sign(data.message)
+    const response2 = await fetch('http://localhost:8080/api/card/addWallet', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cardId: '6692f9195728efd497c8785b', address, signature })
+    });
+    const data2 = await response2.json();
+    console.log('addWallet', data2)
+
+    fetchUserWallets()
+}
 
   const fetchUserWallets = async () => {
     if (!authenticated) {
@@ -77,8 +110,10 @@ const WalletsList = () => {
 
       const data = await response.json();
       setMainWallet(data.user.wallet.address);
-      console.log(data);
+    //   console.log(data);
+    if (data.cards.length) {
       setWallets(data.cards[0].wallets);
+    }
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch user data', error);
@@ -86,6 +121,7 @@ const WalletsList = () => {
   };
 
   useEffect(() => {
+    console.log('wallets',wallets)
     if (wallets&&wallets[0]) {
       setCurrentWallet(wallets[0].address);
     }
@@ -111,13 +147,21 @@ const WalletsList = () => {
           <WalletItem key="main">{mainWallet}</WalletItem>
         )}
       </WalletsListStyled>
-        
+        <WalletsHeading>
+        <span>Current Wallet</span>
+        <AddButton onClick={() => sign()}>+</AddButton>
+        </WalletsHeading>
+        <WalletsListStyled>
+        {currentWallet && (
+          <WalletItem key="main">{currentWallet}</WalletItem>
+        )}
+      </WalletsListStyled>
+      
       <WalletsHeading>
-        <span>Linked Wallets</span>
-        <AddButton onClick={() => setShowModal(true)}>+</AddButton>
+        <span>Portfolio</span>
       </WalletsHeading>
       <WalletsListStyled>
-        {wallets.map((wallet, index) => (
+        {portfolioWallets.map((wallet, index) => (
           <WalletItem key={index}>{wallet}</WalletItem>
         ))}
       </WalletsListStyled>
