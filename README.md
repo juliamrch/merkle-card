@@ -1,7 +1,7 @@
 
 # 🌳 Merkle Card Generator 🌳
 
-A dApp that runs on Ethereum mainnet and L2s to generate a contact card using data gathered accros your wallet(s) history.
+A dApp that runs on Ethereum mainnet and L2s to generate a contact card using data gathered accross your wallet(s) history.
 
 ## Features
 
