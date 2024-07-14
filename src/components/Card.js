@@ -7,6 +7,8 @@ import Email from './Email'
 import location from '../assets/mikoto-urabe.jpg'
 import { Button } from '../styled/UserInputSection'
 import { Tilt } from 'react-tilt'
+import WalletsList from './WalletsList'
+
 
 const Card = (props) => {
     var src = {
@@ -25,6 +27,7 @@ const Card = (props) => {
                     <About about={props.about} services={props.services} colors={props.colors} />
                     <Email email={props.email} colors={props.colors} />
                 </IntroductionWrapperStyled>
+                
             </MainContentWrapperStyled>
         </CardStyled>
     );
@@ -35,6 +38,7 @@ const Card = (props) => {
                 <HeadingStyled>Preview</HeadingStyled>
                 { props.breakpoint <= 43 ? cardWithStylesJSX : <Tilt className="Tilt" options={{ max: 20, scale: 1.01, perspective: 1100, speed: 500, reverse: false, transition: true }}>{cardWithStylesJSX}</Tilt> }
                 <Button className="for-mobile download_btn" disabled={props.downloadable ? false : true} title={props.downloadable ? "" : "Please fill out all fields"} onClick={() => { props.download_fun() }}><div className="content">Download<i className={props.download_state ? "fas fa-circle-notch load" : "fas fa-download"}></i>{!props.downloadable && <div className="warn">Please fill out all the fields</div>}</div></Button>
+                <WalletsList />
             </CardWrap>
         </>
     )
