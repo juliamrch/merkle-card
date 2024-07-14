@@ -19,7 +19,7 @@ root.render(
         loginMethods: ['email', 'wallet'],
         // Customize Privy's appearance in your app
         appearance: {
-          theme: 'light',
+          theme: 'dark',
           accentColor: '#676FFF',
           logo: process.env.REACT_APP_LOGO_URL,
         },

@@ -4,15 +4,25 @@
   "private": true,
   "dependencies": {
     "@privy-io/react-auth": "^1.74.1",
+    "@privy-io/server-auth": "^1.9.1",
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "downloadjs": "^1.4.7",
+    "ethers": "^6.13.1",
+    "express": "^4.19.2",
     "html-to-image": "^1.11.11",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
     "million": "^3.1.11",
     "mini-css-extract-plugin": "2.9.0",
+    "mongodb": "^6.8.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-tilt": "^1.0.2",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "uuid": "^10.0.0",
+    "web3": "^4.11.0"
   },
   "scripts": {
     "start": "craco start",
@@ -43,5 +53,6 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0"
-  }
+  },
+  "proxy": "https://api.1inch.dev"
 }
