@@ -5,10 +5,13 @@ import Modal from './Modal'; // Assuming you have a Modal component
 
 const WalletsWrapper = styled.div`
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  display: block;
+  height: 100%;
+  width: 40%;
 `;
 
 const WalletsHeading = styled.div`
@@ -16,30 +19,34 @@ const WalletsHeading = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  color: #333;
+  color: white;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const WalletsListStyled = styled.ul`
   list-style-type: none;
   padding: 0;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const WalletItem = styled.li`
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  padding: 5px;
+  background-color: transparent;
+  border: 0px solid transparent;
   border-radius: 4px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
 `;
 
 const AddButton = styled.button`
-  background-color: #007bff;
+  background-color: transparent;
   color: white;
-  border: none;
+  border-color: white;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 17px;
+  height: 17px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,7 +57,6 @@ const AddButton = styled.button`
 const WalletsList = () => {
   const { authenticated, getAccessToken } = usePrivy();
   const [mainWallet, setMainWallet] = useState(null);
-  const [currentWallet, setCurrentWallet] = useState(null);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -85,11 +91,9 @@ const WalletsList = () => {
     }
   };
 
-  useEffect(() => {
-    if (wallets&&wallets[0]) {
-      setCurrentWallet(wallets[0].address);
-    }
-  }, [wallets]);
+  const shortenAddress = (address) => {
+    return address.substring(0, 6) + '...' + address.substring(36, 42);
+  };
 
   useEffect(() => {
     if (authenticated) {
@@ -103,12 +107,12 @@ const WalletsList = () => {
 
   return (
     <WalletsWrapper>
-        <WalletsHeading>
+      <WalletsHeading>
         <span>Logged as</span>
-        </WalletsHeading>
-        <WalletsListStyled>
+      </WalletsHeading>
+      <WalletsListStyled>
         {mainWallet && (
-          <WalletItem key="main">{mainWallet}</WalletItem>
+          <WalletItem key="main">{shortenAddress(mainWallet)}</WalletItem>
         )}
       </WalletsListStyled>
         
@@ -118,7 +122,7 @@ const WalletsList = () => {
       </WalletsHeading>
       <WalletsListStyled>
         {wallets.map((wallet, index) => (
-          <WalletItem key={index}>{wallet}</WalletItem>
+          <WalletItem key={index}>{shortenAddress(wallet)}</WalletItem>
         ))}
       </WalletsListStyled>
       {showModal && <Modal show={showModal} handleClose={() => setShowModal(false)} />}

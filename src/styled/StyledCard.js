@@ -5,7 +5,7 @@ export const CardWrap = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #23252C;
+    background-color: transparent;
     height: 100%;
     width: 40%;
     position: sticky;
