@@ -46,6 +46,7 @@ async function createCard(req, res) {
     const card = await cardsDB.insertOne({
         mainWallet: user.wallet.address,
         name,
+        lastUpdated: 0
     })
 
     res.json({ card });

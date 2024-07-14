@@ -1,10 +1,10 @@
 require('../libs/env')
 
-const REACT_APP_ONEINCH_KEY = process.env.REACT_APP_ONEINCH_API_KEY
+const REACT_APP_ONEINCH_KEY = process.env.ONEINCH_API_KEY
 
 const chains = require('./chains.json')
 const axios = require("axios");
-const { cardsDB, portfoliosDB, tokensDB } = require('./mongodb')
+const { cardsDB, portfoliosDB, tokensDB } = require('../libs/mongodb')
 
 async function getWalletTokensInfoRaw(wallet) {
     const url = "https://api.1inch.dev/portfolio/portfolio/v4/overview/erc20/details";
@@ -24,7 +24,7 @@ async function getWalletTokensInfoRaw(wallet) {
         // console.log(response.data);
         return response.data
     } catch (error) {
-        console.error(error);
+        console.error(error.response.status, error.response.statusText);
     }
 
     return null
@@ -156,6 +156,8 @@ async function getWalletTokensInfo(walletAddress) {
             abs_profit_usd: tokenInfo.abs_profit_usd,
         })
     }
+
+    await sleep(1000)
 
     const nftsRaw = await getJpegsInfo(walletAddress)
     const nfts = []
@@ -301,6 +303,8 @@ async function updateCards() {
 
             allTokens = allTokens.concat(tokens)
             allNfts = allNfts.concat(nfts)
+
+            await sleep(1000)
         }
 
         const totalValue = allTokens.reduce((all, v) => all + v.value, 0)
