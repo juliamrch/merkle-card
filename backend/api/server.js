@@ -133,20 +133,37 @@ async function addCardWallet(req, res) {
 
 const app = express();
 
-app.use(express.json());
-const corsOptions = {
-    origin: ['http://localhost:3000', 'https://yourdomain.com'],
-    optionsSuccessStatus: 200
-}
-app.use(cors(corsOptions));
+// Create a CORS middleware function
+function corsMiddleware(req, res, next) {
+    const allowedOrigins = ['http://localhost:3000', 'https://pre-merkle-card.cleverapps.io'];
+    const origin = req.headers.origin;
+  
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
+  
+    next();
+  }
+  
+  // Use the CORS middleware in app
+  app.use(corsMiddleware);
+
+//app.use(express.json());
+//const corsOptions = {
+//    origin: ['http://localhost:3000', 'https://pre-merkle-card.cleverapps.io/'],
+//    optionsSuccessStatus: 200
+//}
+//app.use(cors(corsOptions));
 
 // Use the logged function as middleware for this route
-app.get('/api/user/logged', logged);
-app.post('/api/card/create', createCard);
-app.get('/api/card/getWalletSignatureMessage', getWalletSignatureMessage);
-app.post('/api/card/addWallet', addCardWallet);
+//app.get('/api/user/logged', logged);
+//app.post('/api/card/create', createCard);
+//app.get('/api/card/getWalletSignatureMessage', getWalletSignatureMessage);
+//app.post('/api/card/addWallet', addCardWallet);
 
-const port = 8080;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-})
+//const port = 8080;
+//app.listen(port, () => {
+//    console.log(`Server running on port ${port}`);
+//})

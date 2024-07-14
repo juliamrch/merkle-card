@@ -75,7 +75,7 @@ const WalletsList = () => {
     const address = wallet.address
 
     const token = await getAccessToken();
-    const response = await fetch('https://pre-merkle-card-back.cleverapps.io/api/card/getWalletSignatureMessage?address=' + address, {
+    const response = await fetch('https://pre-merkle-card.cleverapps.io/api/card/getWalletSignatureMessage?address=' + address, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -86,7 +86,7 @@ const WalletsList = () => {
     console.log('getWalletSignatureMessage', data)
 
     const signature = await wallet.sign(data.message)
-    const response2 = await fetch('https://pre-merkle-card-back.cleverapps.io/api/card/addWallet', {
+    const response2 = await fetch('https://pre-merkle-card.cleverapps.io/api/card/addWallet', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -108,7 +108,7 @@ const WalletsList = () => {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch('https://pre-merkle-card-back.cleverapps.io/api/user/logged', {
+      const response = await fetch('https://pre-merkle-card.cleverapps.io/api/user/logged', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
