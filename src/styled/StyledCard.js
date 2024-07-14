@@ -19,11 +19,19 @@ export const CardWrap = styled.div`
 `;
 
 export const CardStyled = styled.div`
-    background-color: ${props => props.colors.cardBackgroundColor};
+background-image: linear-gradient(to right, #16222A 0%, ${props => props.colors.cardBackgroundColor} 51%, #16222A  100%);
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 20px #eee;           
     width: 17rem;
     border: 1px solid transparent;
     border-radius: 0.9rem;
     overflow: hidden;
+
+    &:hover {
+        background-position: right center;
+        color: #fff;
 `;
 
 export const MainContentWrapperStyled = styled.div`

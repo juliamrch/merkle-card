@@ -21,7 +21,7 @@ const WalletsHeading = styled.div`
   align-items: center;
   margin-bottom: 10px;
   color: white;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 `;
 
 const WalletsListStyled = styled.ul`

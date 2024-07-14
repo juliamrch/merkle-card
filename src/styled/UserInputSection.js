@@ -170,7 +170,7 @@ export const ThemesWrap = styled.div`
 export const SelectTheme = styled.div`
     height: 2rem;
     width: 2rem;
-    border: 0.2rem solid transparent;
+    border: none;
     border-radius: 50%;
     cursor: pointer;
 
