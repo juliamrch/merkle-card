@@ -313,7 +313,7 @@ function App() {
     <>
       <main id="main">
         <UserInputWrap>
-          <HeadingStyled className="main-heading">Contact Card Generator</HeadingStyled>
+          <HeadingStyled className="main-heading">Merkle Card Generator</HeadingStyled>
           <LoginButton className="login-button" />
           {ready && authenticated && (
             <>
