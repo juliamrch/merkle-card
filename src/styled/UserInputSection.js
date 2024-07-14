@@ -25,7 +25,7 @@ export const UserInputWrap = styled.div`
 `;
 
 export const Input = styled.input`
-    background-color: #1A1B21;
+    background-color: rgba(255, 255, 255, 0.4);
     color: #ffffff;
     outline: none;
     border: 3px solid transparent;
@@ -39,7 +39,7 @@ export const Label = styled.label`
     align-items: center;
     gap: 0.5rem;
     background-color: #1A1B21;
-    color: #6e6e6e;
+    color: #6e6e6egit;
     transition: color 0.3s ease-in-out;
     outline: none;
     border: 3px solid transparent;
