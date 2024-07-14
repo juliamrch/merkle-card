@@ -15,7 +15,7 @@ export const UserInputWrap = styled.div`
     }
     input, textarea, label, input::placeholder, textarea::placeholder{
         font-size: 0.85rem;
-        color: rgba(0, 0, 0, 0.5);
+        color: rgba(255, 255, 255, 0.7);
     }
     button{
         font-size: 0.85rem; 
@@ -30,7 +30,7 @@ export const UserInputWrap = styled.div`
 `;
 
 export const Input = styled.input`
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.25);
     color: #ffffff;
     outline: none;
     border: 3px solid transparent;
@@ -67,7 +67,7 @@ export const Label = styled.label`
 `;
 
 export const Textarea = styled.textarea`
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.25);
     color: #ffffff;
     outline: none;
     border: 3px solid transparent;
