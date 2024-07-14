@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 const envPath = path.resolve(__dirname, '..', '.env')
 dotenv.config({ path: envPath })
 
-const { MongoClient } = require('mongodb')
+const { MongoClient, ObjectId } = require('mongodb')
 
 let db
 
@@ -20,7 +20,8 @@ function getDB() {
 const cardsDB = getDB().collection('cards')
 const portfoliosDB = getDB().collection('portfolios')
 const tokensDB = getDB().collection('tokens')
+const websiteUsersDB = getDB().collection('users')
 
 module.exports = {
-    getDB, cardsDB, portfoliosDB, tokensDB
+    ObjectId, getDB, cardsDB, portfoliosDB, tokensDB, websiteUsersDB
 }

@@ -8,9 +8,9 @@ module.exports = async function verifyJWT(token, appId, publicKey, appSecret) {
 
         try {
             const decoded = await privyClient.verifyAuthToken(token);
-            console.log(decoded)
+            // console.log(decoded)
             user = await privyClient.getUser(decoded.userId);
-            console.log(user)
+            // console.log(user)
         }
         catch (e) { console.log(e) }
 
