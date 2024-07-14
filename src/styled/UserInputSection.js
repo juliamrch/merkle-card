@@ -13,9 +13,14 @@ export const UserInputWrap = styled.div`
     input, textarea, button, label {
         font-family: 'Poppins', sans-serif;
     }
-    input, textarea, button, label, input::placeholder, textarea::placeholder{
+    input, textarea, label, input::placeholder, textarea::placeholder{
         font-size: 0.85rem;
+        color: rgba(0, 0, 0, 0.5);
     }
+    button{
+        font-size: 0.85rem; 
+    }
+
 
     @media screen and (max-width: 45em){
         width: 85%;
@@ -62,7 +67,7 @@ export const Label = styled.label`
 `;
 
 export const Textarea = styled.textarea`
-    background-color: #1A1B21;
+    background-color: rgba(255, 255, 255, 0.4);
     color: #ffffff;
     outline: none;
     border: 3px solid transparent;
@@ -72,7 +77,7 @@ export const Textarea = styled.textarea`
 `;
 
 export const Button = styled.button`
-    background-color: #ffb681;
+background-color: rgba(255, 255, 255, 0.8);
     color: #000000;
     padding: 0.7rem 2rem;
     width: fit-content;

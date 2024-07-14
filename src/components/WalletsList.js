@@ -49,6 +49,8 @@ const AddButton = styled.button`
 
 const WalletsList = () => {
   const { authenticated, getAccessToken } = usePrivy();
+  const [mainWallet, setMainWallet] = useState(null);
+  const [currentWallet, setCurrentWallet] = useState(null);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -74,12 +76,20 @@ const WalletsList = () => {
       }
 
       const data = await response.json();
-      setWallets(data.user.linkedAccounts.map(account => account.address));
+      setMainWallet(data.user.wallet.address);
+      console.log(data);
+      setWallets(data.cards[0].wallets);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch user data', error);
     }
   };
+
+  useEffect(() => {
+    if (wallets&&wallets[0]) {
+      setCurrentWallet(wallets[0].address);
+    }
+  }, [wallets]);
 
   useEffect(() => {
     if (authenticated) {
@@ -93,6 +103,15 @@ const WalletsList = () => {
 
   return (
     <WalletsWrapper>
+        <WalletsHeading>
+        <span>Logged as</span>
+        </WalletsHeading>
+        <WalletsListStyled>
+        {mainWallet && (
+          <WalletItem key="main">{mainWallet}</WalletItem>
+        )}
+      </WalletsListStyled>
+        
       <WalletsHeading>
         <span>Linked Wallets</span>
         <AddButton onClick={() => setShowModal(true)}>+</AddButton>
