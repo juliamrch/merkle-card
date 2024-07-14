@@ -12,6 +12,7 @@ const WalletsWrapper = styled.div`
   display: block;
   height: 100%;
   width: 40%;
+  justify-content: space-around;
 `;
 
 const WalletsHeading = styled.div`
@@ -27,6 +28,8 @@ const WalletsListStyled = styled.ul`
   list-style-type: none;
   padding: 0;
   font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  font-size: 0.8rem;
 `;
 
 const WalletItem = styled.li`
@@ -37,7 +40,7 @@ const WalletItem = styled.li`
   margin-bottom: 10px;
   box-shadow: none;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 `;
 
 const AddButton = styled.button`
@@ -153,6 +156,7 @@ const WalletsList = () => {
   }
 
   return (
+    <>
     <WalletsWrapper>
       <WalletsHeading>
         <span>Logged as</span>
@@ -162,6 +166,10 @@ const WalletsList = () => {
           <WalletItem key="main">{shortenAddress(mainWallet)}</WalletItem>
         )}
       </WalletsListStyled>
+    </WalletsWrapper>
+
+
+    <WalletsWrapper>
         <WalletsHeading>
         <span>Current Wallet</span>
         <AddButton onClick={() => sign()}>+</AddButton>
@@ -171,7 +179,9 @@ const WalletsList = () => {
           <WalletItem key="main">{shortenAddress(currentWallet)}</WalletItem>
         )}
       </WalletsListStyled>
-      
+    </WalletsWrapper>
+    
+    <WalletsWrapper>
       <WalletsHeading>
         <span>Showing NFTs from:</span>
       </WalletsHeading>
@@ -182,7 +192,9 @@ const WalletsList = () => {
       </WalletsListStyled>
       {showModal && <Modal show={showModal} handleClose={() => setShowModal(false)} />}
     </WalletsWrapper>
-  );
-};
+    </>
+
+    );
+}
 
 export default WalletsList;
