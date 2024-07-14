@@ -52,6 +52,20 @@ async function createCard(req, res) {
     res.json({ card });
 };
 
+async function updateCard(req, res) {
+    const user = await checkLogin(req, res)
+    if (user === null) {
+        return
+    }
+
+    // @TODO: validate chosenNft, chosenTokens
+    const { cardId, chosenNft, chosenTokens } = req.body
+
+    const card = await cardsDB.updateOne({ mainWallet: user.wallet.address, _id: new ObjectId(cardId) }, { $set: { chosenNft, chosenTokens } });
+
+    res.json({ card });
+};
+
 function generateMessage(address, nonce) {
     const issuanceTime = new Date().toISOString();
 
@@ -145,6 +159,7 @@ app.get('/api/user/logged', logged);
 app.post('/api/card/create', createCard);
 app.get('/api/card/getWalletSignatureMessage', getWalletSignatureMessage);
 app.post('/api/card/addWallet', addCardWallet);
+app.post('/api/card/update', updateCard);
 
 const port = 8080;
 app.listen(port, () => {
