@@ -10,7 +10,7 @@ import LoginButton from './components/Login';
 import Modal from './components/Modal';
 import Gallery from './components/Gallery';
 import LoadingSpinner from './components/Spinner';
-import { usePrivy } from '@privy-io/react-auth';
+import { usePrivy,useWallets } from '@privy-io/react-auth';
 import axios from 'axios';
 
 function App() {
@@ -47,6 +47,36 @@ function App() {
   });
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const { wallets } = useWallets();
+
+  async function sign() {
+    const wallet = wallets[0]; // Replace this with your desired wallet
+    const address = wallet.address
+
+    const token = await getAccessToken();
+    const response = await fetch('http://localhost:5000/api/card/getWalletSignatureMessage?address=' + address, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    console.log('getWalletSignatureMessage', data)
+
+    const signature = await wallet.sign(data.message)
+    const response2 = await fetch('http://localhost:5000/api/card/addWallet', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cardId: '6692f9195728efd497c8785b', address, signature })
+    });
+    const data2 = await response2.json();
+    console.log('addWallet', data2)
+}
 
   const fetchUserData = async () => {
     if (!authenticated) {
