@@ -57,7 +57,7 @@ const AddButton = styled.button`
 const WalletsList = () => {
   const { authenticated, getAccessToken } = usePrivy();
   const [mainWallet, setMainWallet] = useState(null);
-  const [wallets, setWallets] = useState([]);
+
   const [currentWallet, setCurrentWallet] = useState(null);
   const [portfolioWallets, setWallets] = useState([]);
 
@@ -168,16 +168,16 @@ const WalletsList = () => {
         </WalletsHeading>
         <WalletsListStyled>
         {currentWallet && (
-          <WalletItem key="main">{currentWallet}</WalletItem>
+          <WalletItem key="main">{shortenAddress(currentWallet)}</WalletItem>
         )}
       </WalletsListStyled>
       
       <WalletsHeading>
-        <span>Portfolio</span>
+        <span>Showing NFTs from:</span>
       </WalletsHeading>
       <WalletsListStyled>
         {portfolioWallets.map((wallet, index) => (
-          <WalletItem key={index}>{wallet}</WalletItem>
+          <WalletItem key={index}>{shortenAddress(wallet)}</WalletItem>
         ))}
       </WalletsListStyled>
       {showModal && <Modal show={showModal} handleClose={() => setShowModal(false)} />}
