@@ -157,7 +157,7 @@ function App() {
       }
     }
 
-    (filled.image && filled.textarea && filled.inputs) ? setDownloadable(true) : setDownloadable(false);
+    (filled.textarea && filled.inputs) ? setDownloadable(true) : setDownloadable(false);
   }
 
   function colorChange(e) {
