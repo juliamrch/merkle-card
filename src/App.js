@@ -324,7 +324,8 @@ function App() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        name: "placeholder",
+        body: JSON.stringify({...formData, wallets: [] })
       });
 
       if (!response.ok) {
@@ -344,7 +345,7 @@ function App() {
       <main id="main">
         <UserInputWrap>
           <HeadingStyled className="main-heading">Merkle Card Generator</HeadingStyled>
-          <LoginButton className="login-button" />
+          <LoginButton className="login-button" onClick={() => createNewCard({id: Date.now(), formData: {} })}/>
           {ready && authenticated && (
             <>
               <button className="web3button" onClick={() => setShowModal(true)}>Choose Picture</button>
@@ -352,7 +353,7 @@ function App() {
                 {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
               </Modal>
               {/* New Card Button */}
-              <button className="web3button" onClick={() => createNewCard({ id: Date.now(), formData: {} })}>New Card</button>
+              <button className="web3button" onClick={() => createNewCard({ name: "nyaaaaaaa", id: Date.now(), formData: {} })}>New Card</button>
 
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
               <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />

@@ -276,43 +276,47 @@ async function crawlUnknownTokens(crawlTokensObj) {
 }
 
 async function updateCards() {
-    const oneMinuteAgo = Date.now() - 60000
+    const oneMinuteAgo = Date.now() - 60000;
 
     const cursor = cardsDB.find({
         lastUpdated: { $lt: oneMinuteAgo }
-    }).sort({ lastUpdated: 1 })
+    }).sort({ lastUpdated: 1 });
 
     const results = await cursor.toArray();
 
     for (let i = 0, cnt = results.length; i < cnt; ++i) {
-        const card = results[i]
-        const cardFilter = { _id: card._id }
+        const card = results[i];
+        const cardFilter = { _id: card._id };
 
-        await cardsDB.updateOne(cardFilter, { $set: { status: 'UPDATING' } })
-        console.log('updating card', card.name)
+        await cardsDB.updateOne(cardFilter, { $set: { status: 'UPDATING' } });
+        console.log('updating card', card.name);
 
-        let allTokens = []
-        let allNfts = []
+        let allTokens = [];
+        let allNfts = [];
 
-        for (let j = 0, cntj = card.wallets.length; j < cntj; ++j) {
-            const wallet = card.wallets[j]
-
-            console.log('updating wallet', wallet)
-
-            const { tokens, nfts } = await getWalletTokensInfo(wallet)
-
-            allTokens = allTokens.concat(tokens)
-            allNfts = allNfts.concat(nfts)
-
-            await sleep(1000)
+        if (!card.wallets || card.wallets.length === 0) {
+            console.error(`Card ${card.name} has no wallets associated.`);
+            continue;
         }
 
-        const totalValue = allTokens.reduce((all, v) => all + v.value, 0)
-        const totalPnl = allTokens.reduce((all, v) => all + v.abs_profit_usd, 0)
+        for (let j = 0, cntj = card.wallets.length; j < cntj; ++j) {
+            const wallet = card.wallets[j];
+            console.log('updating wallet', wallet);
 
-        await cardsDB.updateOne(cardFilter, { $set: { tokens: allTokens, nfts: allNfts, totalValue, totalPnl, status: 'FINISHED', lastUpdated: Date.now() } })
+            const { tokens, nfts } = await getWalletTokensInfo(wallet);
 
-        await sleep(1000)
+            allTokens = allTokens.concat(tokens);
+            allNfts = allNfts.concat(nfts);
+
+            await sleep(1000);
+        }
+
+        const totalValue = allTokens.reduce((all, v) => all + v.value, 0);
+        const totalPnl = allTokens.reduce((all, v) => all + v.abs_profit_usd, 0);
+
+        await cardsDB.updateOne(cardFilter, { $set: { tokens: allTokens, nfts: allNfts, totalValue, totalPnl, status: 'FINISHED', lastUpdated: Date.now() } });
+
+        await sleep(1000);
     }
 }
 
