@@ -12,7 +12,7 @@ import Gallery from './components/Gallery';
 import LoadingSpinner from './components/Spinner';
 import WalletsList from './components/WalletsList';
 import { usePrivy,useWallets } from '@privy-io/react-auth';
-import axios from 'axios';
+import CardForm from './components/CardForm';
 
 function App() {
   const { user, ready, authenticated, getAccessToken } = usePrivy();
@@ -25,6 +25,7 @@ function App() {
     fileType: "",
     target: {}
   });
+  const [cards, setCards] = useState([]);
   const [downloadState, setDownloadState] = useState(false);
   const [downloadable, setDownloadable] = useState(false);
   const [inputs, setInputs] = useState({
@@ -116,7 +117,7 @@ function App() {
     }
   }, [isImageModified]);
 
-  function inputChange(e) {
+  function inputChange(e, index) {
     setInputs(prev => ({
       ...prev,
       [e.target.name]: e.target.value
@@ -309,39 +310,61 @@ function App() {
     return inputs[field] === '' ? undefined : inputs[field];
   }
 
+  const createNewCard = async (formData) => {
+    if (!authenticated) {
+      console.log('User not authenticated');
+      return;
+    }
+
+    try {
+      const token = await getAccessToken();
+      const response = await fetch(`http://localhost:8080/api/card/create`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create new card');
+      }
+
+      const data = await response.json();
+      const newCard = data.card;
+      setCards(prevCards => [newCard, ...prevCards]); // Add the new card to the state at the top
+    } catch (error) {
+      console.error('Failed to create new card', error);
+    }
+  };
+
   return (
     <>
       <main id="main">
-        <UserInputWrap>
+
+      <LoginButton className="login-button" />
+        {/*<UserInputWrap> */}
           <HeadingStyled className="main-heading">Merkle Card Generator</HeadingStyled>
           <LoginButton className="login-button" />
-          {ready && authenticated && (
+          {/*{ready && authenticated && (
             <>
               <button className="web3button" onClick={() => setShowModal(true)}>Choose Picture</button>
               <Modal show={showModal} handleClose={() => setShowModal(false)}>
                 {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
               </Modal>
-              <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
-              <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
-              <Input type="text" name="occupation" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.occupation || ""} id="occupation" placeholder="Profession" required autoComplete="off" />
-              <Input type="text" name="website" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.website || ""} id="website" placeholder="Website" required autoComplete="off" />
-              <Input type="email" name="email" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.email || ""} id="email" placeholder="Email" required autoComplete="off" />
-              <Textarea type="text" name="about" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.about || ""} id="about" placeholder="A little bit about you.." rows="5" required autoComplete="off" />
-              <Textarea type="text" name="services" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.services || ""} id="interests" placeholder="Services offered..." rows="5" required autoComplete="off" />
-              <ThemesWrap>
-                <p>Theme </p>
-                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'black' }} />
-                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'white' }} />
-                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#582C4D' }} />
-                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#3D5A80' }} />
-                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#F4E8C1' }} />
-                <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#EEB4B3' }} />
-              </ThemesWrap>
-              <Button className="for-desktop download_btn" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
-            </>
-          )}
-        </UserInputWrap>
-        <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.imageUrl : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
+          */}
+
+              {/* New Card Button */}
+              <button className="web3button" onClick={() => setCards([{ id: Date.now(), formData: {} }, ...cards])}>New Card</button>
+
+              {/* Render Card Forms */}
+              {cards.map((card, index) => (
+                <Card key={card.id} initialData={card.formData} onSubmit={createNewCard} />
+              ))}
+        {/*</UserInputWrap>
+        
+        {/* <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.imageUrl : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} /> */}
       </main>
       <Footer />
     </>

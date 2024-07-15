@@ -186,7 +186,7 @@ const WalletsList = () => {
         <span>Showing NFTs from:</span>
       </WalletsHeading>
       <WalletsListStyled>
-        {portfolioWallets.map((wallet, index) => (
+      {Array.isArray(portfolioWallets) && portfolioWallets.map((wallet, index) => (
           <WalletItem key={index}>{shortenAddress(wallet)}</WalletItem>
         ))}
       </WalletsListStyled>

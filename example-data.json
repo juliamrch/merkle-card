@@ -1,0 +1,13 @@
+{
+    "_id": {
+      "$oid": "6695642eb57c153c13b1fb24"
+    },
+    "mainWallet": "0x9bc9CF1C8DFa3e1E75FB2470Bb52F016Fb84321C",
+    "name": null,
+    "lastUpdated": 1721067637116,
+    "status": "FINISHED",
+    "nfts": [],
+    "tokens": [],
+    "totalPnl": 0,
+    "totalValue": 0
+  }
