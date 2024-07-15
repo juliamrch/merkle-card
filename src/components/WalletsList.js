@@ -75,7 +75,8 @@ const WalletsList = () => {
     const address = wallet.address
 
     const token = await getAccessToken();
-    const response = await fetch('http://localhost:8080/api/card/getWalletSignatureMessage?address=' + address, {
+    // Try dynamic value injection here just to feel something
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/card/getWalletSignatureMessage?address=${address}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -86,7 +87,7 @@ const WalletsList = () => {
     console.log('getWalletSignatureMessage', data)
 
     const signature = await wallet.sign(data.message)
-    const response2 = await fetch('http://localhost:8080/api/card/addWallet', {
+    const response2 = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/card/addWallet`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -108,7 +109,7 @@ const WalletsList = () => {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch('http://localhost:8080/api/user/logged', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/logged`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

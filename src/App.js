@@ -58,7 +58,7 @@ function App() {
     
     try {
       const token = await getAccessToken();
-      const response = await fetch('http://localhost:8080/api/user/logged', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/logged`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -318,7 +318,7 @@ function App() {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch(`http://localhost:8080/api/card/create`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/card/create`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

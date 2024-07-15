@@ -135,7 +135,7 @@ const app = express();
 
 app.use(express.json());
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://yourdomain.com'],
+    origin: [process.env.REACT_APP_API_BASE_URL,'http://localhost:3000',],
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions));
