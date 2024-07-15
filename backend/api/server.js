@@ -135,7 +135,7 @@ const app = express();
 
 app.use(express.json());
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://yourdomain.com'],
+    origin: ['http://localhost:3000', 'https://pre-merkle-card.cleverapps.io'],
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions));

@@ -57,7 +57,7 @@ function App() {
     
     try {
       const token = await getAccessToken();
-      const response = await fetch('http://localhost:8080/api/user/logged', {
+      const response = await fetch('https://pre-merkle-card.cleverapps.io/api/user/logged', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
