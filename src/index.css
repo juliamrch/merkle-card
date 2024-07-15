@@ -76,7 +76,7 @@
   }
 
   .login-button:hover {
-    background-position: right center; /* change the direction of the change here */
+    background-position: right center;
     color: #fff;
     text-decoration: none;
   }
@@ -92,5 +92,12 @@
     text-align: center;
     text-transform: uppercase;
     transition: 0.5s;
+  }
+
+  .web3button:hover {
+    background-position: right center;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 0 20px #eee;
   }
  
