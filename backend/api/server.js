@@ -6,7 +6,7 @@ const Web3 = require('web3')
 
 const verifyJWT = require('../libs/verifyJWT')
 const { ObjectId, cardsDB, portfoliosDB, tokensDB, websiteUsersDB } = require('../libs/mongodb')
-const { getJpegsInfo } = require('../libs/jpegsInfo'); // Adjust the path as necessary
+const { getJpegsInfo } = require('../crawler/one.inch');
 
 async function checkLogin(req, res) {
     const authHeader = req.headers.authorization;
