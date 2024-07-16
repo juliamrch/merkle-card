@@ -131,62 +131,77 @@ function sleep(ms) {
 }
 
 async function getWalletTokensInfo(walletAddress) {
-    const data = await getWalletTokensInfoRaw(walletAddress)
-    const walletData = data.result
+    try {
+        const data = await getWalletTokensInfoRaw(walletAddress);
 
-    await sleep(1000)
-
-    const customTokensIds = await crawlTokensIfNeeded(walletData)
-    const { knownTokensObj } = await getKnownTokens(customTokensIds)
-    const tokens = []
-
-    for (let i = 0, cnt = walletData.length; i < cnt; ++i) {
-        const tokenInfo = walletData[i]
-        const customTokenId = tokenInfo.chain_id + tokenInfo.contract_address
-        const tokenRaw = knownTokensObj[customTokenId]
-
-        tokenInfo.token = tokenRaw
-
-        tokens.push({
-            chain: { chainId: tokenInfo.chain_id, name: chains[tokenInfo.chain_id] },
-            image: tokenRaw.logoURI,
-            name: `${tokenRaw.symbol} (${tokenRaw.name})`,
-            amount: tokenInfo.amount,
-            value: tokenInfo.value_usd,
-            abs_profit_usd: tokenInfo.abs_profit_usd,
-        })
-    }
-
-    await sleep(1000)
-
-    const nftsRaw = await getJpegsInfo(walletAddress)
-    const nfts = []
-
-    for (let i = 0, cnt = nftsRaw.assets.length; i < cnt; ++i) {
-        const nft = nftsRaw.assets[i]
-
-        if (!nft.image_thumbnail_url || !nft.name || !nft.permalink) {
-            continue
+        if (!data || !data.result) {
+            throw new Error('Invalid response from server');
         }
 
-        nfts.push({ chain: { chainId: nft.chainId, name: chains[nft.chainId] }, image: nft.image_thumbnail_url, name: nft.name, link: nft.permalink })
-    }
+        const walletData = data.result;
 
-    const result = await portfoliosDB.updateOne({ walletAddress }, {
-        $set: {
-            tokens,
-            tokensRaw: walletData,
-            nfts,
-            nftsRaw,
-            lastUpdateTime: Date.now(),
+        await sleep(1000);
+
+        const customTokensIds = await crawlTokensIfNeeded(walletData);
+        const { knownTokensObj } = await getKnownTokens(customTokensIds);
+        const tokens = [];
+
+        for (let i = 0, cnt = walletData.length; i < cnt; ++i) {
+            const tokenInfo = walletData[i];
+            const customTokenId = tokenInfo.chain_id + tokenInfo.contract_address;
+            const tokenRaw = knownTokensObj[customTokenId];
+
+            tokenInfo.token = tokenRaw;
+
+            tokens.push({
+                chain: { chainId: tokenInfo.chain_id, name: chains[tokenInfo.chain_id] },
+                image: tokenRaw.logoURI,
+                name: `${tokenRaw.symbol} (${tokenRaw.name})`,
+                amount: tokenInfo.amount,
+                value: tokenInfo.value_usd,
+                abs_profit_usd: tokenInfo.abs_profit_usd,
+            });
         }
-    }, { upsert: true });
 
-    console.log(`${result.matchedCount} getWalletTokensInfo document(s) matched the filter criteria.`);
-    console.log(`${result.modifiedCount} getWalletTokensInfo document(s) was/were updated.`);
-    console.log(`${result.upsertedCount} getWalletTokensInfo document(s) was/were inserted.`);
+        await sleep(1000);
 
-    return { tokens, nfts }
+        const nftsRaw = await getJpegsInfo(walletAddress);
+        const nfts = [];
+
+        if (nftsRaw && nftsRaw.assets) {
+            for (let i = 0, cnt = nftsRaw.assets.length; i < cnt; ++i) {
+                const nft = nftsRaw.assets[i];
+
+                if (!nft.image_thumbnail_url || !nft.name || !nft.permalink) {
+                    continue;
+                }
+
+                nfts.push({ chain: { chainId: nft.chainId, name: chains[nft.chainId] }, image: nft.image_thumbnail_url, name: nft.name, link: nft.permalink });
+            }
+        }
+
+        const result = await portfoliosDB.updateOne({ walletAddress }, {
+            $set: {
+                tokens,
+                tokensRaw: walletData,
+                nfts,
+                nftsRaw,
+                lastUpdateTime: Date.now(),
+            }
+        }, { upsert: true });
+
+        console.log(`${result.matchedCount} getWalletTokensInfo document(s) matched the filter criteria.`);
+        console.log(`${result.modifiedCount} getWalletTokensInfo document(s) was/were updated.`);
+        console.log(`${result.upsertedCount} getWalletTokensInfo document(s) was/were inserted.`);
+
+        return { tokens, nfts };
+    } catch (error) {
+        if (error.response && error.response.status === 429) {
+            console.error('Too many requests. Please try again later.');
+        } else {
+            console.error('Failed to get wallet tokens info', error);
+        }
+    }
 }
 
 async function getKnownTokens(customTokensIds) {
@@ -303,7 +318,13 @@ async function updateCards() {
             const wallet = card.wallets[j];
             console.log('updating wallet', wallet);
 
-            const { tokens, nfts } = await getWalletTokensInfo(wallet);
+            const walletInfo = await getWalletTokensInfo(wallet);
+            if (!walletInfo) {
+                console.error(`Failed to get wallet tokens info for wallet ${wallet}`);
+                continue;
+            }
+
+            const { tokens = [], nfts = [] } = walletInfo;
 
             allTokens = allTokens.concat(tokens);
             allNfts = allNfts.concat(nfts);

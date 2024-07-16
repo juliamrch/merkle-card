@@ -47,6 +47,7 @@ function App() {
     emailColor: "#918E9B",
     emailBackgroundColor: "#161619"
   });
+  
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -343,25 +344,37 @@ function App() {
   return (
     <>
       <main id="main">
+        
         <UserInputWrap>
+          
           <HeadingStyled className="main-heading">Merkle Card Generator</HeadingStyled>
-          <LoginButton className="login-button" onClick={() => createNewCard({id: Date.now(), formData: {} })}/>
+          
+          <LoginButton className="login-button" />
           {ready && authenticated && (
             <>
               <button className="web3button" onClick={() => setShowModal(true)}>Choose Picture</button>
+              
               <Modal show={showModal} handleClose={() => setShowModal(false)}>
                 {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
               </Modal>
+              
               {/* New Card Button */}
-              <button className="web3button" onClick={() => createNewCard({ name: "nyaaaaaaa", id: Date.now(), formData: {} })}>New Card</button>
+              <button className="web3button" onClick={() => createNewCard({ name: "create", id: Date.now(), formData: {} })}>New Card</button>
 
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
+              
               <Input type="text" name="name" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.name || ""} id="name" placeholder="Your name?" required autoComplete="off" />
+              
               <Input type="text" name="occupation" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.occupation || ""} id="occupation" placeholder="Profession" required autoComplete="off" />
+              
               <Input type="text" name="website" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.website || ""} id="website" placeholder="Website" required autoComplete="off" />
+              
               <Input type="email" name="email" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.email || ""} id="email" placeholder="Email" required autoComplete="off" />
+              
               <Textarea type="text" name="about" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.about || ""} id="about" placeholder="A little bit about you.." rows="5" required autoComplete="off" />
+              
               <Textarea type="text" name="services" onChange={(e) => { inputChange(e); input_check(); }} value={inputs.services || ""} id="interests" placeholder="Services offered..." rows="5" required autoComplete="off" />
+              
               <ThemesWrap>
                 <p>Theme </p>
                 <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: 'black' }} />
@@ -371,12 +384,17 @@ function App() {
                 <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#F4E8C1' }} />
                 <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#EEB4B3' }} />
               </ThemesWrap>
+              
               <Button className="for-desktop download_btn" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
             </>
           )}
+        
         </UserInputWrap>
+        
         <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.imageUrl : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
+      
       </main>
+      
       <Footer />
     </>
   );

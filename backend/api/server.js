@@ -6,6 +6,7 @@ const Web3 = require('web3')
 
 const verifyJWT = require('../libs/verifyJWT')
 const { ObjectId, cardsDB, portfoliosDB, tokensDB, websiteUsersDB } = require('../libs/mongodb')
+const { getJpegsInfo } = require('../libs/jpegsInfo'); // Adjust the path as necessary
 
 async function checkLogin(req, res) {
     const authHeader = req.headers.authorization;
@@ -36,21 +37,36 @@ async function logged(req, res) {
 };
 
 async function createCard(req, res) {
-    const user = await checkLogin(req, res)
+    const user = await checkLogin(req, res);
     if (user === null) {
-        return
+        return;
     }
 
-    const { name } = req.body
+    const { name } = req.body;
 
-    const card = await cardsDB.insertOne({
-        mainWallet: user.wallet.address,
-        name,
-        lastUpdated: 0
-    })
+    try {
+        const nftsRaw = await getJpegsInfo(user.wallet.address);
+        const nfts = nftsRaw && nftsRaw.assets ? nftsRaw.assets.map(asset => ({
+            id: asset.id,
+            name: asset.name,
+            image: asset.image_thumbnail_url,
+            link: asset.permalink
+        })) : [];
 
-    res.json({ card });
-};
+        const card = await cardsDB.insertOne({
+            mainWallet: user.wallet.address,
+            name,
+            nfts,
+            lastUpdated: 0,
+            status: 'UPDATING'
+        });
+
+        res.json({ card });
+    } catch (error) {
+        console.error('Failed to fetch NFTs or create card', error);
+        res.status(500).json({ error: 'Failed to create card' });
+    }
+}
 
 function generateMessage(address, nonce) {
     const issuanceTime = new Date().toISOString();
