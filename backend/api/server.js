@@ -6,7 +6,6 @@ const Web3 = require('web3')
 
 const verifyJWT = require('../libs/verifyJWT')
 const { ObjectId, cardsDB, portfoliosDB, tokensDB, websiteUsersDB } = require('../libs/mongodb')
-const { getJpegsInfo } = require('../crawler/one.inch');
 
 async function checkLogin(req, res) {
     const authHeader = req.headers.authorization;
@@ -44,28 +43,14 @@ async function createCard(req, res) {
 
     const { name } = req.body;
 
-    try {
-        const nftsRaw = await getJpegsInfo(user.wallet.address);
-        const nfts = nftsRaw && nftsRaw.assets ? nftsRaw.assets.map(asset => ({
-            id: asset.id,
-            name: asset.name,
-            image: asset.image_thumbnail_url,
-            link: asset.permalink
-        })) : [];
+    const card = await cardsDB.insertOne({
+        mainWallet: user.wallet.address,
+        name,
+        wallets: [user.wallet.address],
+        lastUpdated: 0,
+    });
 
-        const card = await cardsDB.insertOne({
-            mainWallet: user.wallet.address,
-            name,
-            nfts,
-            lastUpdated: 0,
-            status: 'UPDATING'
-        });
-
-        res.json({ card });
-    } catch (error) {
-        console.error('Failed to fetch NFTs or create card', error);
-        res.status(500).json({ error: 'Failed to create card' });
-    }
+    res.json({ card });
 }
 
 function generateMessage(address, nonce) {
@@ -151,7 +136,7 @@ const app = express();
 
 app.use(express.json());
 const corsOptions = {
-    origin: [process.env.REACT_APP_API_BASE_URL,'http://localhost:3000',],
+    origin: [process.env.REACT_APP_API_BASE_URL, 'http://localhost:3000',],
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions));
