@@ -12,6 +12,7 @@ import Gallery from './components/Gallery';
 import LoadingSpinner from './components/Spinner';
 import WalletsList from './components/WalletsList';
 import { usePrivy,useWallets } from '@privy-io/react-auth';
+import axios from 'axios';
 //import CardForm from './components/CardForm';
 
 function App() {
@@ -72,15 +73,20 @@ function App() {
       }
 
       const data = await response.json();
-      const secondaryWallets = data.user.wallet?.address;
-      const formattedNFTs = !data.cards || data.cards.length === 0 || !data.cards[0].nfts ? [] : data.cards[0].nfts.map(asset => ({
-        id: '',
+      const walletAddress = data.user.wallet?.address;
+
+      // Fetch NFTs using the wallet address
+      const nftsData = data.cards.length > 0 ? data.cards[0].nfts : [];
+      const formattedNFTs = nftsData.map(asset => ({
+        id: asset.id,
         name: asset.name,
-        description: '',
+        description: asset.description || '',
         imageUrl: asset.image,
         permalink: asset.link
       }));
-      setNfts(formattedNFTs); setLoading(false)
+
+      setNfts(formattedNFTs);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch user data', error);
     }
@@ -401,36 +407,4 @@ function App() {
 };
 
 export default App;
-
-//  return (
-{/*    <>
-      <main id="main">
-
-      <LoginButton className="login-button" />
-        <UserInputWrap>
-          <HeadingStyled className="main-heading">Merkle Card Generator</HeadingStyled>
-          <LoginButton className="login-button" />
-          {/*{ready && authenticated && (
-            <>
-              <button className="web3button" onClick={() => setShowModal(true)}>Choose Picture</button>
-              <Modal show={showModal} handleClose={() => setShowModal(false)}>
-                {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
-              </Modal>
-          
-
-              {/* New Card Button
-              <button className="web3button" onClick={() => setCards([{ id: Date.now(), formData: {} }, ...cards])}>New Card</button>
-
-              {/* Render Card Forms
-              {cards.map((card, index) => (
-                <Card key={card.id} initialData={card.formData} onSubmit={createNewCard} />
-              ))}
-        {/*</UserInputWrap>
-        
-        {/* <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.imageUrl : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
-      </main> 
-      <Footer />
-    </>
-  );
-}; */}
 
