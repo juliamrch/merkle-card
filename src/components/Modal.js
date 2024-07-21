@@ -14,24 +14,28 @@ const ModalWrapper = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: #fefefe;
+  background-color: rgba(255, 255, 255, 0.6);
   margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   max-width: 800px;
   border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
 `;
 
 const CloseButton = styled.span`
-  color: #aaa;
+  color: black;
   float: right;
   font-size: 28px;
   font-weight: bold;
 
   &:hover,
   &:focus {
-    color: black;
+    color: pink;
     text-decoration: none;
     cursor: pointer;
   }

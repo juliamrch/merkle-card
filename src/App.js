@@ -317,35 +317,6 @@ function App() {
     return inputs[field] === '' ? undefined : inputs[field];
   }
 
-  const createNewCard = async (formData) => {
-    if (!authenticated) {
-      console.log('User not authenticated');
-      return;
-    }
-
-    try {
-      const token = await getAccessToken();
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/card/create`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        name: "placeholder",
-        body: JSON.stringify({...formData, wallets: [] })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create new card');
-      }
-
-      const data = await response.json();
-      const newCard = data.card;
-      setCards(prevCards => [newCard, ...prevCards]); // Add the new card to the state at the top
-    } catch (error) {
-      console.error('Failed to create new card', error);
-    }
-  };
 
   return (
     <>
@@ -364,8 +335,8 @@ function App() {
                 {loading ? <LoadingSpinner /> : <Gallery nfts={nfts} onSelect={handleSelectNFT} />}
               </Modal>
               
-              {/* New Card Button */}
-              <button className="web3button" onClick={() => createNewCard({ name: "create", id: Date.now(), formData: {} })}>New Card</button>
+              {/* New Card Button 
+              <button className="web3button" onClick={() => createNewCard({ name: "create", id: Date.now(), formData: {} })}>New Card</button>*/}
 
               <Input type="file" accept="image/*" onChange={(e) => { setIsImageModified({ status: true, fileType: e.target.files[0].type.split("/")[0], target: e.target }); input_check(); }} id="image" placeholder="Upload an image" required />
               
@@ -391,7 +362,7 @@ function App() {
                 <SelectTheme onClick={(e) => { colorChange(e) }} style={{ backgroundColor: '#EEB4B3' }} />
               </ThemesWrap>
               
-              <Button className="for-desktop download_btn" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
+              <Button className="web3button" disabled={downloadable ? false : true} title={downloadable ? "" : "Please fill out all fields"} onClick={() => { download_image() }}>Download<i className={downloadState ? "fas fa-circle-notch load" : "fas fa-download"}></i></Button>
             </>
           )}
         

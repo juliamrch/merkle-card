@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {WalletsListContainer, WalletsWrapper, WalletsHeading, WalletsListStyled,WalletItem, AddButton } from '../styled/StyledWalletsList'
 import { usePrivy,useWallets } from '@privy-io/react-auth';
-import styled from 'styled-components';
-import Modal from './Modal'; // Assuming you have a Modal component
+import Modal from './Modal';
+import NewCard from './NewCard';
+import NewCardButton from './NewCard';
 
 
 
@@ -17,7 +18,6 @@ const WalletsList = () => {
   const [showModal, setShowModal] = useState(false);
 
   const { wallets } = useWallets();
-
   
   async function sign() {
     const wallet = wallets[0]; // Replace this with your desired wallet
@@ -105,6 +105,7 @@ const WalletsList = () => {
     return <div>Loading...</div>;
   }
 
+  
   return (
     ready && authenticated && (
     <WalletsListContainer>
@@ -142,6 +143,10 @@ const WalletsList = () => {
         </WalletsListStyled>
         {showModal && <Modal show={showModal} handleClose={() => setShowModal(false)} />}
       </WalletsWrapper>
+      {/* New Card Button in progress
+      <button className="web3button" onClick={() => createNewCard({ name: "create", id: Date.now(), formData: {} })}>New Card</button>*/}
+      <NewCardButton></NewCardButton>
+       
     </WalletsListContainer>
     )
   );

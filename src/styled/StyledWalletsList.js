@@ -7,7 +7,7 @@ export const WalletsListContainer = styled.div`
   gap: 20px;
   padding: 10px;
   position: sticky;
-  top: 2rem; // Adjust as needed to match the card's sticky position
+  top: 2rem; 
 
   @media (max-width: 768px) {
     gap: 10px;
