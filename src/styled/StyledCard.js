@@ -12,9 +12,10 @@ export const CardWrap = styled.div`
     top: 2rem;
     margin-bottom: 4rem;
 
-    @media screen and (max-width: 45em){
+    @media screen and (max-width: 768px) {
         width: 80%;
         margin-bottom: 2rem;
+        position: static; // Remove sticky positioning on smaller screens
     }
 `;
 

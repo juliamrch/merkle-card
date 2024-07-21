@@ -398,6 +398,7 @@ function App() {
         </UserInputWrap>
         
         <Card name={props_conf('name')} occupation={props_conf('occupation')} website={props_conf('website')} email={props_conf('email')} linkedin about={props_conf('about')} services={props_conf('services')} github twitter instagram colors={colors} download_fun={download_image} image_src={selectedNFT ? selectedNFT.imageUrl : image} download_state={downloadState} breakpoint={breakpoint} downloadable={downloadable} />
+        <WalletsList />
       
       </main>
       

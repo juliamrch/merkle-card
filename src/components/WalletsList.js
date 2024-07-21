@@ -1,64 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import {WalletsListContainer, WalletsWrapper, WalletsHeading, WalletsListStyled,WalletItem, AddButton } from '../styled/StyledWalletsList'
 import { usePrivy,useWallets } from '@privy-io/react-auth';
 import styled from 'styled-components';
 import Modal from './Modal'; // Assuming you have a Modal component
 
-const WalletsWrapper = styled.div`
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-  display: block;
-  height: 100%;
-  width: 40%;
-  justify-content: space-around;
-`;
 
-const WalletsHeading = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  color: white;
-  font-family: 'Inter', sans-serif;
-`;
-
-const WalletsListStyled = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-  font-weight: bold;
-  font-size: 0.8rem;
-`;
-
-const WalletItem = styled.li`
-  padding: 5px;
-  background-color: transparent;
-  border: 0px solid transparent;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  box-shadow: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.75rem;
-`;
-
-const AddButton = styled.button`
-  background-color: transparent;
-  color: white;
-  border-color: white;
-  border-radius: 50%;
-  width: 17px;
-  height: 17px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 20px;
-`;
 
 const WalletsList = () => {
-  const { authenticated, getAccessToken } = usePrivy();
+  const { ready, authenticated, getAccessToken } = usePrivy();
   const [mainWallet, setMainWallet] = useState(null);
 
   const [currentWallet, setCurrentWallet] = useState(null);
@@ -157,45 +106,45 @@ const WalletsList = () => {
   }
 
   return (
-    <>
-    <WalletsWrapper>
-      <WalletsHeading>
-        <span>Logged as</span>
-      </WalletsHeading>
-      <WalletsListStyled>
-        {mainWallet && (
-          <WalletItem key="main">{shortenAddress(mainWallet)}</WalletItem>
-        )}
-      </WalletsListStyled>
-    </WalletsWrapper>
-
-
-    <WalletsWrapper>
+    ready && authenticated && (
+    <WalletsListContainer>
+      <WalletsWrapper zIndex={3}>
         <WalletsHeading>
-        <span>Current Wallet</span>
-        <AddButton onClick={() => sign()}>+</AddButton>
+          <span>Logged as</span>
         </WalletsHeading>
         <WalletsListStyled>
-        {currentWallet && (
-          <WalletItem key="main">{shortenAddress(currentWallet)}</WalletItem>
-        )}
-      </WalletsListStyled>
-    </WalletsWrapper>
-    
-    <WalletsWrapper>
-      <WalletsHeading>
-        <span>Showing NFTs from:</span>
-      </WalletsHeading>
-      <WalletsListStyled>
-      {Array.isArray(portfolioWallets) && portfolioWallets.map((wallet, index) => (
-          <WalletItem key={index}>{shortenAddress(wallet)}</WalletItem>
-        ))}
-      </WalletsListStyled>
-      {showModal && <Modal show={showModal} handleClose={() => setShowModal(false)} />}
-    </WalletsWrapper>
-    </>
+          {mainWallet && (
+            <WalletItem key="main">{shortenAddress(mainWallet)}</WalletItem>
+          )}
+        </WalletsListStyled>
+      </WalletsWrapper>
 
-    );
+      <WalletsWrapper zIndex={2}>
+        <WalletsHeading>
+          <span>Current Wallet</span>
+          <AddButton onClick={() => sign()}>+</AddButton>
+        </WalletsHeading>
+        <WalletsListStyled>
+          {currentWallet && (
+            <WalletItem key="main">{shortenAddress(currentWallet)}</WalletItem>
+          )}
+        </WalletsListStyled>
+      </WalletsWrapper>
+
+      <WalletsWrapper zIndex={1}>
+        <WalletsHeading>
+          <span>Showing NFTs from:</span>
+        </WalletsHeading>
+        <WalletsListStyled>
+          {Array.isArray(portfolioWallets) && portfolioWallets.map((wallet, index) => (
+            <WalletItem key={index}>{shortenAddress(wallet)}</WalletItem>
+          ))}
+        </WalletsListStyled>
+        {showModal && <Modal show={showModal} handleClose={() => setShowModal(false)} />}
+      </WalletsWrapper>
+    </WalletsListContainer>
+    )
+  );
 }
 
 export default WalletsList;
