@@ -6,3 +6,4 @@ functions
 build/*
 /backend/package-lock.json
 /backend/node_modules
+pnpm-lock.yaml

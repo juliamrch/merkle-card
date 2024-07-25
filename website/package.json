@@ -9,8 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^5.16.4",
+    "@privy-io/react-auth": "^1.76.1",
+    "@privy-io/server-auth": "^1.9.4",
+    "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
+    "uuid": "^10.0.0"
   }
 }
